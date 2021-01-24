@@ -27,6 +27,25 @@ impl Cipher {
             Cipher::Data(d) => d
         }
     }
+
+    pub fn unwrap_to_num_string(self) -> String {
+        let mut x = String::new();
+
+        match self {
+            Cipher::Key(k) => {
+                for i in k {
+                    x.push_str(i.to_string().as_str());
+                }
+            },
+            Cipher::Data(d) => {
+                for i in d {
+                    x.push_str(i.to_string().as_str());
+                }
+            }
+        };
+
+        x
+    }
 }
 
 pub struct Data {
