@@ -6,6 +6,29 @@ pub enum Cipher {
     Data(Vec<u8>),
 }
 
+impl Cipher {
+    pub fn unwrap_key(self) -> Result<Vec<u8>, String> {
+        match self {
+            Cipher::Key(k) => Ok(k),
+            Cipher::Data(_) => Err("This is data, not a key".to_string())
+        }
+    }
+
+    pub fn unwrap_data(self) -> Result<Vec<u8>, String> {
+        match self {
+            Cipher::Data(d) => Ok(d),
+            Cipher::Key(_) => Err("This is a key, not data".to_string())
+        }
+    }
+
+    pub fn unwrap(self) -> Vec<u8> {
+        match self {
+            Cipher::Key(k) => k,
+            Cipher::Data(d) => d
+        }
+    }
+}
+
 pub struct Data {
     key: String,
     nonce: String,
