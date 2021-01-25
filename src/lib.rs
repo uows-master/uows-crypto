@@ -10,14 +10,14 @@ impl Cipher {
     pub fn unwrap_key(self) -> Result<Vec<u8>, String> {
         match self {
             Cipher::Key(k) => Ok(k),
-            Cipher::Data(_) => Err("This is data, not a key".to_string())
+            Cipher::Data(_) => Err("This is data, not a key".to_string()),
         }
     }
 
     pub fn unwrap_data(self) -> Result<Vec<u8>, String> {
         match self {
             Cipher::Data(d) => Ok(d),
-            Cipher::Key(_) => Err("This is a key, not data".to_string())
+            Cipher::Key(_) => Err("This is a key, not data".to_string()),
         }
     }
 
@@ -26,7 +26,7 @@ impl Cipher {
     pub fn unwrap(self) -> Vec<u8> {
         match self {
             Cipher::Key(k) => k,
-            Cipher::Data(d) => d
+            Cipher::Data(d) => d,
         }
     }
 
@@ -38,7 +38,7 @@ impl Cipher {
                 for i in k {
                     x.push_str(i.to_string().as_str());
                 }
-            },
+            }
             Cipher::Data(d) => {
                 for i in d {
                     x.push_str(i.to_string().as_str());
@@ -60,13 +60,13 @@ impl Cipher {
                 for i in k {
                     x.push(i as char);
                 }
-            },
-            Cipher::Key(_) => y = Err("Not Data".to_string())
+            }
+            Cipher::Key(_) => y = Err("Not Data".to_string()),
         };
 
         match y {
             Ok(_) => Ok(x),
-            Err(_) => y
+            Err(_) => y,
         }
     }
 }
