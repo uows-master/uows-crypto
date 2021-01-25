@@ -21,6 +21,8 @@ impl Cipher {
         }
     }
 
+    /// Do NOT call this unless absolutely sure about the enum type.
+    /// Call [`unwrap_key`] or [`unwrap_data`] instead.
     pub fn unwrap(self) -> Vec<u8> {
         match self {
             Cipher::Key(k) => k,
@@ -45,6 +47,27 @@ impl Cipher {
         };
 
         x
+    }
+
+    /// Only call this function when you are sure that the enum contains
+    /// decrypted data and is [`Cipher::Data`]
+    pub fn unwrap_to_string_from_dat(self) -> Result<String, String> {
+        let mut x = String::new();
+        let mut y: Result<String, String> = Ok("".to_string());
+
+        match self {
+            Cipher::Data(k) => {
+                for i in k {
+                    x.push(i as char);
+                }
+            },
+            Cipher::Key(_) => y = Err("Not Data".to_string())
+        };
+
+        match y {
+            Ok(_) => Ok(x),
+            Err(_) => y
+        }
     }
 }
 
@@ -170,5 +193,18 @@ impl Data {
         }
 
         self.encrypt(tmp)
+    }
+
+    pub fn parse_dec(&self, s: &str, is_str: bool) -> Cipher {
+        let mut tmp: Vec<u8> = Vec::new();
+        if is_str {
+            for i in s.as_bytes().iter() {
+                tmp.push(*i)
+            }
+        } else {
+            tmp = s.split(' ').map(|s| s.parse::<u8>().unwrap()).collect();
+        }
+
+        self.decrypt(tmp)
     }
 }
