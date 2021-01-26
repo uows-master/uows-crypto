@@ -36,13 +36,15 @@ impl Cipher {
         match self {
             Cipher::Key(k) => {
                 for i in k {
-                    x.push_str(i.to_string().as_str());
+                    x.push_str((i.to_string() + " ").as_str());
                 }
+                x.pop();
             }
             Cipher::Data(d) => {
                 for i in d {
-                    x.push_str(i.to_string().as_str());
+                    x.push_str((i.to_string() + " ").as_str());
                 }
+                x.pop();
             }
         };
 
