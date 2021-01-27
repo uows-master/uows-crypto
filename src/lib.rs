@@ -143,7 +143,7 @@ impl Data {
         let non = GenericArray::from_slice(self.nonce.as_bytes());
 
         let plaintext = enc
-            .encrypt(non, data.as_ref())
+            .decrypt(non, data.as_ref())
             .expect("Encryption of data failed");
 
         Cipher::Data(plaintext)
@@ -157,7 +157,7 @@ impl Data {
         let non = GenericArray::from_slice(self.nonce.as_bytes());
 
         let plaintext = enc
-            .encrypt(non, data.as_ref())
+            .decrypt(non, data.as_ref())
             .expect("Encryption of data failed");
 
         let mut out = String::new();
