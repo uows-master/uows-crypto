@@ -12,3 +12,7 @@
 # 0.1.3
 ## Major Bugfix
 * `Data::decrypt` function was calling the `encrypt` backend
+
+# 0.1.4
+## Minor Change
+* Licence changed to GNU AGPL-3.0
