@@ -16,3 +16,7 @@
 # 0.1.4
 ## Minor Change
 * Licence changed to GNU AGPL-3.0
+
+# 0.1.5
+## Minor Change
+* Derived `Clone` for `Cipher` enum

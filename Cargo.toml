@@ -1,7 +1,7 @@
 [package]
 name = "uows-crypto"
-version = "0.1.4"
-authors = ["Saadi Save <https://github.com/SaadiSave"]
+version = "0.1.5"
+authors = ["Saadi Save <https://github.com/SaadiSave>"]
 edition = "2018"
 description = "Crypto lib for UOWS"
 license = "AGPL-3.0"
