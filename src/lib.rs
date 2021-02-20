@@ -32,19 +32,15 @@ impl Cipher {
     }
 
     pub fn unwrap_to_num_string(self) -> String {
-        let mut x = String::new();
+        let mut x: String;
 
         match self {
             Cipher::Key(k) => {
-                for i in k {
-                    x.push_str((i.to_string() + " ").as_str());
-                }
+                x = k.iter().map(|i| i.to_string() + " ").collect();
                 x.pop();
             }
             Cipher::Data(d) => {
-                for i in d {
-                    x.push_str((i.to_string() + " ").as_str());
-                }
+                x = d.iter().map(|i| i.to_string() + " ").collect();
                 x.pop();
             }
         };
@@ -59,11 +55,7 @@ impl Cipher {
         let mut y: Result<String, String> = Ok("".to_string());
 
         match self {
-            Cipher::Data(k) => {
-                for i in k {
-                    x.push(i as char);
-                }
-            }
+            Cipher::Data(k) => x = k.iter().map(|i| *i as char).collect(),
             Cipher::Key(_) => y = Err("Not Data".to_string()),
         };
 
@@ -77,6 +69,7 @@ impl Cipher {
 pub struct Data {
     key: String,
     nonce: String,
+    enc: Aes256Gcm,
 }
 
 impl Data {
@@ -99,6 +92,7 @@ impl Data {
         let tmp = Data {
             key: key.to_string(),
             nonce: nonce.to_string(),
+            enc: Aes256Gcm::new(GenericArray::from_slice(key.as_bytes())),
         };
 
         tmp
@@ -106,16 +100,15 @@ impl Data {
 
     /// Check key and data using [`Cipher`] enum and match
     pub fn encrypt_wkey(&self, data: Vec<u8>) -> (Cipher, Cipher) {
-        let key = GenericArray::from_slice(self.key.as_bytes());
-        let enc = Aes256Gcm::new(key);
-
         let non = GenericArray::from_slice(self.nonce.as_bytes());
 
-        let ciphertext = enc
+        let ciphertext = self
+            .enc
             .encrypt(non, data.as_ref())
             .expect("Encryption of data failed");
 
-        let cipherkey = enc
+        let cipherkey = self
+            .enc
             .encrypt(non, self.key.as_ref())
             .expect("Encryption of key failed");
 
@@ -124,12 +117,10 @@ impl Data {
 
     /// Does not return the encrypted [`Cipher::Key`]
     pub fn encrypt(&self, data: Vec<u8>) -> Cipher {
-        let key = GenericArray::from_slice(self.key.as_bytes());
-        let enc = Aes256Gcm::new(key);
-
         let non = GenericArray::from_slice(self.nonce.as_bytes());
 
-        let ciphertext = enc
+        let ciphertext = self
+            .enc
             .encrypt(non, data.as_ref())
             .expect("Encryption of data failed");
 
@@ -138,45 +129,21 @@ impl Data {
 
     /// Returns decrypted plaintext as [`Cipher::Data`]
     pub fn decrypt(&self, data: Vec<u8>) -> Cipher {
-        let key = GenericArray::from_slice(self.key.as_bytes());
-        let enc = Aes256Gcm::new(key);
-
         let non = GenericArray::from_slice(self.nonce.as_bytes());
 
-        let plaintext = enc
+        let plaintext = self
+            .enc
             .decrypt(non, data.as_ref())
             .expect("Encryption of data failed");
 
         Cipher::Data(plaintext)
     }
 
-    /// Direct decryption to [`String`]
-    pub fn decrypt_to_string(&self, data: Vec<u8>) -> String {
-        let key = GenericArray::from_slice(self.key.as_bytes());
-        let enc = Aes256Gcm::new(key);
-
-        let non = GenericArray::from_slice(self.nonce.as_bytes());
-
-        let plaintext = enc
-            .decrypt(non, data.as_ref())
-            .expect("Encryption of data failed");
-
-        let mut out = String::new();
-
-        for i in plaintext {
-            out.push(i as char);
-        }
-
-        out
-    }
-
     /// Directly encrypts data from [`&str`], returns key and data
     pub fn parse_enc_wkey(&self, s: &str, is_str: bool) -> (Cipher, Cipher) {
-        let mut tmp: Vec<u8> = Vec::new();
+        let tmp;
         if is_str {
-            for i in s.as_bytes().iter() {
-                tmp.push(*i)
-            }
+            tmp = s.as_bytes().iter().map(|x| *x).collect();
         } else {
             tmp = s.split(' ').map(|s| s.parse::<u8>().unwrap()).collect();
         }
@@ -186,11 +153,9 @@ impl Data {
 
     /// Directly encrypts data from [`&str`], returns data only
     pub fn parse_enc(&self, s: &str, is_str: bool) -> Cipher {
-        let mut tmp: Vec<u8> = Vec::new();
+        let tmp;
         if is_str {
-            for i in s.as_bytes().iter() {
-                tmp.push(*i)
-            }
+            tmp = s.as_bytes().iter().map(|x| *x).collect();
         } else {
             tmp = s.split(' ').map(|s| s.parse::<u8>().unwrap()).collect();
         }
@@ -200,11 +165,9 @@ impl Data {
 
     /// Direct decryption from [`&str`]
     pub fn parse_dec(&self, s: &str, is_str: bool) -> Cipher {
-        let mut tmp: Vec<u8> = Vec::new();
+        let tmp;
         if is_str {
-            for i in s.as_bytes().iter() {
-                tmp.push(*i)
-            }
+            tmp = s.as_bytes().iter().map(|x| *x).collect();
         } else {
             tmp = s.split(' ').map(|s| s.parse::<u8>().unwrap()).collect();
         }
