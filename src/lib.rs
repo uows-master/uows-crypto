@@ -98,7 +98,7 @@ impl Data {
         tmp
     }
 
-    pub fn new_from_bytes() {}
+    pub fn new_from_bytes(key: Vec<u8>, non: Vec<u8>) {}
 
     /// Check key and data using [`Cipher`] enum and match
     pub fn encrypt_wkey(&self, data: Vec<u8>) -> (Cipher, Cipher) {
