@@ -98,6 +98,8 @@ impl Data {
         tmp
     }
 
+    pub fn new_from_bytes() {}
+
     /// Check key and data using [`Cipher`] enum and match
     pub fn encrypt_wkey(&self, data: Vec<u8>) -> (Cipher, Cipher) {
         let non = GenericArray::from_slice(self.nonce.as_bytes());
