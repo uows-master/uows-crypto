@@ -67,8 +67,8 @@ impl Cipher {
 }
 
 pub struct Data {
-    key: String,
-    nonce: String,
+    key: Vec<u8>,
+    nonce: Vec<u8>,
     enc: Aes256Gcm,
 }
 
@@ -89,20 +89,38 @@ impl Data {
             ))
         }
 
-        let tmp = Data {
-            key: key.to_string(),
-            nonce: nonce.to_string(),
+        Data {
+            key: key.as_bytes().to_vec(),
+            nonce: nonce.as_bytes().to_vec(),
             enc: Aes256Gcm::new(GenericArray::from_slice(key.as_bytes())),
-        };
-
-        tmp
+        }
     }
 
-    pub fn new_from_bytes(key: Vec<u8>, non: Vec<u8>) {}
+    pub fn new_from_bytes(key: Vec<u8>, nonce: Vec<u8>) -> Data {
+        if key.len() != 32 {
+            panic!(format!(
+                "Key isn't 32 chars long. It is {} chars long.",
+                key.len()
+            ))
+        }
+
+        if nonce.len() != 12 {
+            panic!(format!(
+                "Nonce isn't 12 chars long. It is {} chars long.",
+                key.len()
+            ))
+        }
+
+        Data {
+            key: key.clone(),
+            nonce,
+            enc: Aes256Gcm::new(GenericArray::from_slice(key.as_slice())),
+        }
+    }
 
     /// Check key and data using [`Cipher`] enum and match
     pub fn encrypt_wkey(&self, data: Vec<u8>) -> (Cipher, Cipher) {
-        let non = GenericArray::from_slice(self.nonce.as_bytes());
+        let non = GenericArray::from_slice(self.nonce.as_slice());
 
         let ciphertext = self
             .enc
@@ -119,7 +137,7 @@ impl Data {
 
     /// Does not return the encrypted [`Cipher::Key`]
     pub fn encrypt(&self, data: Vec<u8>) -> Cipher {
-        let non = GenericArray::from_slice(self.nonce.as_bytes());
+        let non = GenericArray::from_slice(self.nonce.as_slice());
 
         let ciphertext = self
             .enc
@@ -131,7 +149,7 @@ impl Data {
 
     /// Returns decrypted plaintext as [`Cipher::Data`]
     pub fn decrypt(&self, data: Vec<u8>) -> Cipher {
-        let non = GenericArray::from_slice(self.nonce.as_bytes());
+        let non = GenericArray::from_slice(self.nonce.as_slice());
 
         let plaintext = self
             .enc
