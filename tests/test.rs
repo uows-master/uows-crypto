@@ -70,7 +70,7 @@ fn verify_bytes() {
         .unwrap_to_num_string();
 
     println!("Bytes EKTime: {:?}", ekt.elapsed());
-    
+
     println!("Bytes: {}", den2);
 
     let dt = Instant::now();

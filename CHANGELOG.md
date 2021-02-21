@@ -20,3 +20,10 @@
 # 0.1.5
 ## Minor Change
 * Derived `Clone` for `Cipher` enum
+
+# 0.2.0
+## Breaking Change
+* Removed `Data::decrypt_to_string`
+## Major Changes
+* Massive performance improvements (refer to commits)
+* Added `Data::new_from_bytes` to initialise from `Vec<u8>` instead of `&str`
