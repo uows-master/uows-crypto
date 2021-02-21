@@ -27,3 +27,7 @@
 ## Major Changes
 * Massive performance improvements (refer to commits)
 * Added `Data::new_from_bytes` to initialise from `Vec<u8>` instead of `&str`
+
+# 0.2.1
+## Minor Bugfix
+* Fixed nonce length error message

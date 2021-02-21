@@ -1,6 +1,6 @@
 [package]
 name = "uows-crypto"
-version = "0.2.0"
+version = "0.2.1"
 authors = ["Saadi Save <uowsmaster@outlook.com>"]
 edition = "2018"
 description = "Crypto lib for UOWS"

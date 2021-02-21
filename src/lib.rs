@@ -85,7 +85,7 @@ impl Data {
         if nonce.len() != 12 {
             panic!(format!(
                 "Nonce isn't 12 chars long. It is {} chars long.",
-                key.len()
+                nonce.len()
             ))
         }
 
@@ -107,7 +107,7 @@ impl Data {
         if nonce.len() != 12 {
             panic!(format!(
                 "Nonce isn't 12 chars long. It is {} chars long.",
-                key.len()
+                nonce.len()
             ))
         }
 
